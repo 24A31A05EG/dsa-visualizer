@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DSA Visualizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="logo">DSA<span>viz</span></div>
+    <nav>
+      <button class="nav-btn active" onclick="showTab('bubble')">Bubble Sort</button>
+      <button class="nav-btn" onclick="showTab('binary')">Binary Search</button>
+      <button class="nav-btn" onclick="showTab('stack')">Stack & Queue</button>
+      <button class="nav-btn" onclick="showTab('linked')">Linked List</button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ========== BUBBLE SORT ========== -->
+    <section id="tab-bubble" class="tab active">
+      <div class="section-header">
+        <div>
+          <h1>Bubble Sort</h1>
+          <p class="desc">Repeatedly compares adjacent elements and swaps them if they are in the wrong order.</p>
+        </div>
+        <div class="complexity-badges">
+          <span class="badge red">Time: O(n²)</span>
+          <span class="badge green">Space: O(1)</span>
+        </div>
+      </div>
+
+      <div class="viz-card">
+        <div class="bar-container" id="bubble-bars"></div>
+        <div class="step-info" id="bubble-info">Press Play or Step to start</div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-label">Comparisons</div><div class="stat-val" id="bubble-comps">0</div></div>
+          <div class="stat"><div class="stat-label">Swaps</div><div class="stat-val" id="bubble-swaps">0</div></div>
+          <div class="stat"><div class="stat-label">Step</div><div class="stat-val" id="bubble-step">0 / 0</div></div>
+        </div>
+        <div class="controls">
+          <button class="btn-primary" id="bubble-play" onclick="bubbleTogglePlay()">&#9654; Play</button>
+          <button class="btn-secondary" onclick="bubbleStepFwd()">Step &rarr;</button>
+          <button class="btn-secondary" onclick="bubbleReset()">&#8635; Reset</button>
+          <button class="btn-secondary" onclick="bubbleRandomize()">&#9861; Shuffle</button>
+          <label class="speed-label">Speed
+            <input type="range" id="bubble-speed" min="1" max="10" value="5" step="1">
+          </label>
+        </div>
+        <div class="legend">
+          <span class="leg"><span class="leg-dot" style="background:#7C6FF7"></span>Unsorted</span>
+          <span class="leg"><span class="leg-dot" style="background:#F76F6F"></span>Comparing</span>
+          <span class="leg"><span class="leg-dot" style="background:#F7A94E"></span>Swapping</span>
+          <span class="leg"><span class="leg-dot" style="background:#4ECF91"></span>Sorted</span>
+        </div>
+      </div>
+
+      <div class="code-box">
+        <div class="code-title">Bubble Sort — Java</div>
+        <pre><code>void bubbleSort(int[] arr) {
+    int n = arr.length;
+    for (int i = 0; i &lt; n - 1; i++) {
+        for (int j = 0; j &lt; n - i - 1; j++) {
+            if (arr[j] &gt; arr[j + 1]) {
+                // swap
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- ========== BINARY SEARCH ========== -->
+    <section id="tab-binary" class="tab">
+      <div class="section-header">
+        <div>
+          <h1>Binary Search</h1>
+          <p class="desc">Finds a target in a sorted array by repeatedly halving the search space.</p>
+        </div>
+        <div class="complexity-badges">
+          <span class="badge green">Time: O(log n)</span>
+          <span class="badge green">Space: O(1)</span>
+        </div>
+      </div>
+
+      <div class="viz-card">
+        <div class="search-input-row">
+          <label>Search for:
+            <input type="number" id="binary-target" value="35" min="1" max="99" style="width:70px; margin-left:8px;">
+          </label>
+          <button class="btn-primary" onclick="binaryStart()">&#9654; Search</button>
+          <button class="btn-secondary" onclick="binaryStepFwd()">Step &rarr;</button>
+          <button class="btn-secondary" onclick="binaryReset()">&#8635; Reset</button>
+        </div>
+
+        <div class="binary-container" id="binary-boxes"></div>
+        <div class="pointer-row" id="binary-pointers"></div>
+        <div class="step-info" id="binary-info">Enter a number and press Search</div>
+
+        <div class="stats-row">
+          <div class="stat"><div class="stat-label">Steps</div><div class="stat-val" id="binary-steps-count">0</div></div>
+          <div class="stat"><div class="stat-label">Left</div><div class="stat-val" id="binary-left">—</div></div>
+          <div class="stat"><div class="stat-label">Mid</div><div class="stat-val" id="binary-mid">—</div></div>
+          <div class="stat"><div class="stat-label">Right</div><div class="stat-val" id="binary-right">—</div></div>
+        </div>
+
+        <div class="legend">
+          <span class="leg"><span class="leg-dot" style="background:#7C6FF7"></span>Search space</span>
+          <span class="leg"><span class="leg-dot" style="background:#F7A94E"></span>Mid element</span>
+          <span class="leg"><span class="leg-dot" style="background:#aaa"></span>Eliminated</span>
+          <span class="leg"><span class="leg-dot" style="background:#4ECF91"></span>Found!</span>
+          <span class="leg"><span class="leg-dot" style="background:#F76F6F"></span>Not found</span>
+        </div>
+      </div>
+
+      <div class="code-box">
+        <div class="code-title">Binary Search — Java</div>
+        <pre><code>int binarySearch(int[] arr, int target) {
+    int left = 0, right = arr.length - 1;
+    while (left &lt;= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) return mid;
+        else if (arr[mid] &lt; target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1; // not found
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- ========== STACK & QUEUE ========== -->
+    <section id="tab-stack" class="tab">
+      <div class="section-header">
+        <div>
+          <h1>Stack &amp; Queue</h1>
+          <p class="desc">Stack is LIFO (Last In First Out). Queue is FIFO (First In First Out).</p>
+        </div>
+        <div class="complexity-badges">
+          <span class="badge green">Push/Pop: O(1)</span>
+          <span class="badge green">Enqueue/Dequeue: O(1)</span>
+        </div>
+      </div>
+
+      <div class="two-col">
+
+        <!-- STACK -->
+        <div class="viz-card">
+          <h2 class="sub-title">Stack <span class="tag">LIFO</span></h2>
+          <div class="stack-input-row">
+            <input type="text" id="stack-input" placeholder="Value..." maxlength="4" style="width:80px">
+            <button class="btn-primary" onclick="stackPush()">Push</button>
+            <button class="btn-secondary" onclick="stackPop()">Pop</button>
+            <button class="btn-secondary" onclick="stackClear()">Clear</button>
+          </div>
+          <div class="stack-container" id="stack-visual">
+            <div class="stack-empty-label">Stack is empty</div>
+          </div>
+          <div class="step-info" id="stack-info">Push a value to start</div>
+          <div class="stats-row" style="margin-top:8px">
+            <div class="stat"><div class="stat-label">Size</div><div class="stat-val" id="stack-size">0</div></div>
+            <div class="stat"><div class="stat-label">Top</div><div class="stat-val" id="stack-top">—</div></div>
+          </div>
+        </div>
+
+        <!-- QUEUE -->
+        <div class="viz-card">
+          <h2 class="sub-title">Queue <span class="tag">FIFO</span></h2>
+          <div class="stack-input-row">
+            <input type="text" id="queue-input" placeholder="Value..." maxlength="4" style="width:80px">
+            <button class="btn-primary" onclick="queueEnqueue()">Enqueue</button>
+            <button class="btn-secondary" onclick="queueDequeue()">Dequeue</button>
+            <button class="btn-secondary" onclick="queueClear()">Clear</button>
+          </div>
+          <div class="queue-container" id="queue-visual">
+            <div class="stack-empty-label">Queue is empty</div>
+          </div>
+          <div class="step-info" id="queue-info">Enqueue a value to start</div>
+          <div class="stats-row" style="margin-top:8px">
+            <div class="stat"><div class="stat-label">Size</div><div class="stat-val" id="queue-size">0</div></div>
+            <div class="stat"><div class="stat-label">Front</div><div class="stat-val" id="queue-front">—</div></div>
+            <div class="stat"><div class="stat-label">Rear</div><div class="stat-val" id="queue-rear">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-box">
+        <div class="code-title">Stack &amp; Queue — Java</div>
+        <pre><code>// Stack using ArrayDeque
+Deque&lt;Integer&gt; stack = new ArrayDeque&lt;&gt;();
+stack.push(10);   // push
+stack.pop();      // pop
+stack.peek();     // top element
+
+// Queue using LinkedList
+Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+queue.offer(10);  // enqueue
+queue.poll();     // dequeue
+queue.peek();     // front element</code></pre>
+      </div>
+    </section>
+
+    <!-- ========== LINKED LIST ========== -->
+    <section id="tab-linked" class="tab">
+      <div class="section-header">
+        <div>
+          <h1>Linked List</h1>
+          <p class="desc">A chain of nodes where each node holds a value and a pointer to the next node.</p>
+        </div>
+        <div class="complexity-badges">
+          <span class="badge yellow">Insert Head: O(1)</span>
+          <span class="badge red">Search: O(n)</span>
+        </div>
+      </div>
+
+      <div class="viz-card">
+        <div class="stack-input-row" style="flex-wrap:wrap; gap:8px;">
+          <input type="text" id="ll-input" placeholder="Value..." maxlength="4" style="width:80px">
+          <button class="btn-primary" onclick="llInsertHead()">Insert Head</button>
+          <button class="btn-primary" onclick="llInsertTail()">Insert Tail</button>
+          <button class="btn-secondary" onclick="llDeleteHead()">Delete Head</button>
+          <button class="btn-secondary" onclick="llDeleteTail()">Delete Tail</button>
+          <button class="btn-secondary" onclick="llClear()">Clear</button>
+        </div>
+
+        <div class="ll-container" id="ll-visual">
+          <div class="stack-empty-label">List is empty — insert a node!</div>
+        </div>
+        <div class="step-info" id="ll-info">Insert a node to start</div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-label">Size</div><div class="stat-val" id="ll-size">0</div></div>
+          <div class="stat"><div class="stat-label">Head</div><div class="stat-val" id="ll-head">—</div></div>
+          <div class="stat"><div class="stat-label">Tail</div><div class="stat-val" id="ll-tail">—</div></div>
+        </div>
+      </div>
+
+      <div class="code-box">
+        <div class="code-title">Linked List — Java</div>
+        <pre><code>class Node {
+    int data;
+    Node next;
+    Node(int data) { this.data = data; }
+}
+
+class LinkedList {
+    Node head;
+
+    void insertAtHead(int data) {
+        Node newNode = new Node(data);
+        newNode.next = head;
+        head = newNode;
+    }
+
+    void insertAtTail(int data) {
+        Node newNode = new Node(data);
+        if (head == null) { head = newNode; return; }
+        Node curr = head;
+        while (curr.next != null) curr = curr.next;
+        curr.next = newNode;
+    }
+
+    void deleteHead() {
+        if (head != null) head = head.next;
+    }
+}</code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="algorithms/bubbleSort.js"></script>
+  <script src="algorithms/binarySearch.js"></script>
+  <script src="algorithms/stackQueue.js"></script>
+  <script src="algorithms/linkedList.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
